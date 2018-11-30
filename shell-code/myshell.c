@@ -39,23 +39,27 @@ char* read_line(char *str, int n, FILE *stream){
 	return str;}
 
 void execute(cmdLine *pCmdLine){	
-	int *status = 0;
+	int status = 0;
 	pid_t pid = fork();
 	if(pid<0){
 		perror("FORK ERROR");
 	}
 	else if(pid==0)
 	{
+		printf("child pid: %d\n",(int)pid );
 		char *cmd = pCmdLine->arguments[0];
 		execvp(cmd,pCmdLine->arguments);
 	}
-	else
-		wait(status);
+	else{
+		wait(&status);
+		printf("exit code: %d\n", WIFEXITED(status));
+	}
+
 
 }
 
 void check_exit(char *input){
-	if(strcmp(input, "exit")==0)
+	if(strcmp(input, "_exit")==0)
 		exit(0);
 }
 
